@@ -1,0 +1,104 @@
+{% extends 'base/base.html' %}
+
+<head>
+  <title>{% block title %} Ver Historial{% endblock %}</title>
+</head>
+
+<body>
+  {% block content %}
+  <div class="verhistorial-content">
+    <div class="fila-verhistorial">
+      <div class="izquierda-verHis">
+        <div class="izq-his-content">
+          {% if user.is_authenticated %}
+          <!--<button type="button" name="button" value="Editar Perfil" onclick="editarPerfil">Editar perfil</button>-->
+          {% load static%}
+          <div style="height: 5%;">
+          </div>
+          <div style="height: 70%;">
+            <p style="text-align: center;">
+              <img class="imagen-user" alt="webi" src="{% static 'paisaje.jpg' %}" width="220px" height="220px" />
+            </p>
+            {% endif %}
+            <center>
+              <h4  style="color: #47525e;">{{ currUser.nombre }}</h4>
+              <p  style="color: #47525e;">Correo</p>
+              <h4 style="color: #47525e;">{{ request.user.email }}</h4>
+              <p style="color: #47525e;">Contactalo(a)</p>
+              <h4 style="color: #47525e;">{{ currUser.celular }}</h4>
+            </center>
+          </div>
+          <div style="height: 5%;">
+          </div>
+          <div style="height: 20%;">
+            <center>
+              <p style="color: #47525e;">Actualmente es un usuario</p>
+              <h4 style="color: #47525e;">{{ currUser.nivel }}</h4>
+              <p  style="color: #47525e;">Se unió el {{ currUser.fecha_de_creacion }}</p>
+              <a class="botones-index" href="../editarPerfil/{{currUser.id}}">Editar perfil</a>
+            </center>
+          </div>
+        </div>
+      </div>
+      <!--Separacion de cuadros-->
+      <div style="padding: 2px;"></div>
+
+      <div class="derecha-verHis">
+        <div class="der-verh-content">
+          <div class="preg-recientes">
+            <div class="title-his" style="text-align: center; background: #474747; color: white; height: 35px;">
+              <h2 style="padding: 5px;">Preguntas recientes</h2>
+            </div>
+            {% for question in questions %}
+            <br>
+            <div class="content-preg-his izquierda-title ">
+              <div style="width: 80%;">
+                <a  href="../pregunta/?id={{question.id}}">{{ question.enunciado }}</a>
+              </div>
+              <a class="botones-his" href="../eliminarPregunta/{{ question.id }}">Eliminar</a>
+            </div>
+            {% endfor %}
+          </div>
+
+          <div class="actividad-reciente">
+            <div class="title-his" style="text-align: center; background: #474747; color: white; height: 30px;">
+              <h2 style="padding: 5px;">Actividad reciente</h2>
+            </div>
+
+            {% for answer in resFiltradas %}
+            <br>
+            <!-- respuestas de usuario-->
+            <h3>Respondiste a la pregunta: </h3>
+            <div class="content-preg-his izquierda-title ">
+              <div style="width: 100%;">
+                {% for someQuestion in allQuestions %}
+                {% if someQuestion.id == answer.pregunta_id %}
+                <a class="color-tex" href="../pregunta/?id={{ someQuestion.id }}">{{ someQuestion.enunciado }}</a>
+                {% endif%}
+                {% endfor %}
+
+              </div>
+              {% if answer.confiabilidad == "normal" %}
+              <p style="color: #47525e; text-align: justify;">"{{ answer.contenido }}"</p>
+              <a style="float: right;" class="botones-index" href="../eliminarRespuesta/{{ answer.id }}">Eliminar
+                Respuesta ...</a>
+              {% else %}
+            </div>
+            <p style="color: #47525e;  text-align: justify;">"{{ answer.contenido }}"</p>
+            <a style="float: right;" class="botones-index" href="../eliminarRespuesta/{{ answer.id }}">Eliminar
+              Respuesta ...</a>
+            {% endif %}
+            <!--<h6>Esta es un respuesta {{answer.confiabilidad}}</h6>-->
+            {% endfor %}
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  {% endblock %}
+</body>
+
+</html>
